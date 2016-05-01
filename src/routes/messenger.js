@@ -22,9 +22,10 @@ router.get('/', function * listInspections(next) {
 router.get('/hook', function * listInspections(next) {
   const body = this.query;
   this.assert(body['hub.verify_token'] === VALIDATION_TOKEN, 401, 'Validation token is not valid');
-  this.body = body['hub.challenge'];
+  const hubChallenge = body['hub.challenge']
+  this.body = hubChallenge;
   this.status = 200;
-  debug(welcome);
+  debug(hubChallenge);
   yield next;
 });
 
