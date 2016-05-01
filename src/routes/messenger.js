@@ -21,8 +21,8 @@ router.get('/', function * listInspections(next) {
 
 router.get('/hook', function * listInspections(next) {
   const body = this.query;
-  this.assert(body.hub.verify_token === VALIDATION_TOKEN, 401, 'Validation token is not valid');
-  this.body = body.hub.challenge;
+  this.assert(body['hub.verify_token'] === VALIDATION_TOKEN, 401, 'Validation token is not valid');
+  this.body = body['hub.challenge'];
   this.status = 200;
   debug(welcome);
   yield next;
