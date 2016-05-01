@@ -10,8 +10,10 @@ const router = krouter();
 const debug = libdebug('fbmessenger:messenger');
 
 router.get('/', function * listInspections(next) {
-  this.body = 'Welcome to Facebook Messenger Bot';
+  const welcome = 'Welcome to Facebook Messenger Bot';
+  this.body = welcome;
   this.status = 200;
+  debug(welcome);
   yield next;
 });
 
