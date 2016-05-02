@@ -25,7 +25,7 @@ function FacebookMessenger(senderId) {
   * Sends a text message.
   * @param {String} text - Required. Message to send.
   */
-  this.sendTextMessage = function * s(text) {
+  this.sendTextMessage = function * sendTextMessage(text) {
     const messageData = {
       text: text,
     };
@@ -41,7 +41,7 @@ function FacebookMessenger(senderId) {
         access_token: PAGE_ACCESS_TOKEN,
       },
     };
-    return yield request.createRequest(FACEBOOK_MESSAGES_URL, body);
+    return yield request(FACEBOOK_MESSAGES_URL, body);
   };
 }
 

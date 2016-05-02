@@ -1,9 +1,9 @@
-import request from 'co-request';
+import req from 'co-request';
 import libdebug from 'debug';
 
 const debug = libdebug('utilities');
 
-export default function * createRequest(url, options) {
+export default function * request(url, options) {
   const args = {
     uri: url,
     json: true,
@@ -12,7 +12,7 @@ export default function * createRequest(url, options) {
     qs: options.qs || '',
   };
   try {
-    const response = yield request(args);
+    const response = yield req(args);
     return response.body;
   } catch (error) {
     debug('Error ocurred:', error);

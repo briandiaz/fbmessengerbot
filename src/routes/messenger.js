@@ -12,7 +12,7 @@ const VALIDATION_TOKEN = process.env.VALIDATION_TOKEN;
 const router = krouter();
 const debug = libdebug('fbmessenger:messenger');
 
-router.get('/', function * listInspections(next) {
+router.get('/', function * home(next) {
   const welcome = 'Welcome to Facebook Messenger Bot';
   this.body = welcome;
   this.status = 200;
@@ -20,7 +20,7 @@ router.get('/', function * listInspections(next) {
   yield next;
 });
 
-router.get('/hook', function * listInspections(next) {
+router.get('/hook', function * getHook(next) {
   const body = this.query;
   this.assert(body['hub.verify_token'] === VALIDATION_TOKEN, 401, 'Validation token is not valid');
   const hubChallenge = body['hub.challenge'];
@@ -30,16 +30,16 @@ router.get('/hook', function * listInspections(next) {
   yield next;
 });
 
-router.post('/hook', function * listInspections(next) {
+router.post('/hook', function * setHook(next) {
   const body = yield * this.request.json();
   this.assert(body.entry[0].messaging, 400, 'No message events found.');
   const messagingEvents = body.entry[0].messaging;
-  messagingEvents.forEach((event) => {
+  messagingEvents.forEach(function * loop(event) {
     const sender = event.sender.id;
+    const messenger = new Messenger(sender);
     const message = (event.message && event.message.text) ? event.message.text : undefined;
     if (message) {
-      const messenger = new Messenger(sender);
-      messenger.sendTextMessage('Hello from the cloud :)');
+      yield messenger.sendTextMessage('Hello from the cloud :)');
     }
     debug(`Sender: ${sender}`);
     debug(`Message: ${message}`);
@@ -52,6 +52,11 @@ router.post('/hook', function * listInspections(next) {
 export default function createFacebookMessengerBotApplication() {
   const app = koala()
     .use(cors())
+    .use(function* assertBaseUrl(next) {
+      this.assert(process.env.VALIDATION_TOKEN, 500, 'Validation token missing.');
+      this.assert(process.env.PAGE_ACCESS_TOKEN, 500, 'Page access token missing.');
+      yield* next;
+    })
     .use(router.routes())
     .use(router.allowedMethods());
 
