@@ -29,6 +29,25 @@ router.get('/hook', function * listInspections(next) {
   yield next;
 });
 
+router.post('/hook', function * listInspections(next) {
+  const body = yield * this.request.json();
+  this.assert(body.entry[0].messaging, 400, 'No message events found.');
+  const messagingEvents = body.entry[0].messaging;
+  messagingEvents.forEach((event) => {
+    const sender = event.sender.id;
+    const message = (event.message && event.message.text) ? event.message.text : undefined;
+    if (message) {
+      console.log('YES');
+      console.log(message);
+    }
+    debug(`Sender: ${sender}`);
+    debug(`Message: ${message}`);
+  });
+  this.body = messagingEvents;
+  this.status = 200;
+  yield next;
+});
+
 export default function createFacebookMessengerBotApplication() {
   const app = koala()
     .use(cors())
