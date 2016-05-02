@@ -1,7 +1,7 @@
 import request from 'co-request';
 import libdebug from 'debug';
 
-debug = libdebug('utilities');
+const debug = libdebug('utilities');
 
 export default function * createRequest(url, options) {
   const args = {
