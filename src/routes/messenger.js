@@ -3,6 +3,7 @@ import krouter from 'koa-router';
 import libdebug from 'debug';
 import dotenv from 'dotenv';
 import cors from 'koa-cors';
+import Messenger from '../lib/facebook_messenger';
 
 dotenv.load();
 // Dont forget to set this environment variable with your webhook validation token
@@ -37,8 +38,8 @@ router.post('/hook', function * listInspections(next) {
     const sender = event.sender.id;
     const message = (event.message && event.message.text) ? event.message.text : undefined;
     if (message) {
-      console.log('YES');
-      console.log(message);
+      const messenger = new Messenger(sender);
+      messenger.sendTextMessage('Hello from the cloud :)');
     }
     debug(`Sender: ${sender}`);
     debug(`Message: ${message}`);

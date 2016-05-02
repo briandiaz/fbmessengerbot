@@ -9,6 +9,7 @@ export default function * createRequest(url, options) {
     json: true,
     method: options.method || 'GET',
     body: options.body || {},
+    qs: options.qs || '',
   };
   try {
     const response = yield request(args);
