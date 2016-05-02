@@ -61,7 +61,7 @@ function FacebookMessenger() {
     }
     console.log(forecast);
     // Convert Kelvin to Celsius
-    const temperature = (forecast.main.temp - 273.15);
+    const temperature = Math.ceil(forecast.main.temp - 273.15);
     const messageData = {
       'attachment': {
         'type': 'template',
