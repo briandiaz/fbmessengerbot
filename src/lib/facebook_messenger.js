@@ -68,7 +68,7 @@ function FacebookMessenger() {
         'payload': {
           'template_type': 'generic',
           'elements': [{
-            'title': temperature + ' °C',
+            'title': temperature + ' °C - ' + forecast.weather[0].main,
             'subtitle': forecast.name,
             'image_url': 'http://openweathermap.org/img/w/' + forecast.weather[0].icon + '.png',
           },
@@ -88,8 +88,9 @@ function FacebookMessenger() {
         console.log(`Sender: ${sender} Message: ${message}`);
         if (message.includes('weather')) {
           yield sendForecast(sender, message);
+        } else {
+          yield sendMessage(sender, 'Hello from the cloud :)');
         }
-        yield sendMessage(sender, 'Hello from the cloud :)');
         debug(`Sender: ${sender}`);
         debug(`Message: ${message}`);
       }
