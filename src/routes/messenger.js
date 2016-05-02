@@ -6,6 +6,7 @@ import cors from 'koa-cors';
 import Messenger from '../lib/facebook_messenger';
 
 dotenv.load();
+const messenger = new Messenger();
 // Dont forget to set this environment variable with your webhook validation token
 const VALIDATION_TOKEN = process.env.VALIDATION_TOKEN;
 
@@ -34,16 +35,7 @@ router.post('/hook', function * setHook(next) {
   const body = yield * this.request.json();
   this.assert(body.entry[0].messaging, 400, 'No message events found.');
   const messagingEvents = body.entry[0].messaging;
-  messagingEvents.forEach(function * loop(event) {
-    const sender = event.sender.id;
-    const messenger = new Messenger(sender);
-    const message = (event.message && event.message.text) ? event.message.text : undefined;
-    if (message) {
-      yield messenger.sendTextMessage('Hello from the cloud :)');
-    }
-    debug(`Sender: ${sender}`);
-    debug(`Message: ${message}`);
-  });
+  yield messenger.processEvents(messagingEvents);
   this.body = messagingEvents;
   this.status = 200;
   yield next;

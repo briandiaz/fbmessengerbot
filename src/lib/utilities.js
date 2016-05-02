@@ -1,7 +1,7 @@
 import req from 'co-request';
 import libdebug from 'debug';
 
-const debug = libdebug('utilities');
+const debug = libdebug('fbmessenger:utilities');
 
 export default function * request(url, options) {
   const args = {
